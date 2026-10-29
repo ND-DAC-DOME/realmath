@@ -21,7 +21,7 @@ const Function = (props, UpdateHook) => {
     return  [
                 [
                     ColHelper("col-12 col-md-5", false, PropHelper('leftMathField', props.left, UpdateHook)),
-                    ColHelper("col-12 col-md-2", true, '='),
+                    ColHelper("col-12 col-md-2 rm-eq-equals", true, '='),
                     ColHelper("col-12 col-md-5", false, PropHelper('rightMathField', props.right, UpdateHook))
                 ]
             ]

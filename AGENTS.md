@@ -9,7 +9,7 @@ Guidance for AI coding agents (and humans) working in this repo.
 Related repos:
 - **`ND-DAC-DOME/realmathAR`** is the AR viewer (8th Wall + three.js) that this site links to. Its `AGENTS.md` documents the viewer side of the URL contract.
 - **`RamenStudios/realmath`** is the upstream; this repo is a GitHub fork of it. Upstream is itself a fork of `randal-sean-harrison/realmath`, the original 2024 site.
-- **`ND-DAC-DOME/realmath-deprecated`** is an older, unforked copy that has diverged. It holds the ND web theme work (Aug 2026) that is being ported here. Don't merge from it: it's built on the pre-refactor component structure.
+- **`ND-DAC-DOME/realmath-deprecated`** is an older, unforked copy that diverged from upstream. Its ND web theme work (alli-linhart, Aug 2026) has been ported here. Its in-app AR viewer was intentionally not ported, because realmathAR is the viewer. Don't merge from it: it's built on the pre-refactor component structure.
 
 ## Commands
 
@@ -33,7 +33,7 @@ index.html -> src/index.jsx   checkMobile() -> userframe 'mobile' | 'desktop', p
        ├─ Tabs/Tabs.jsx        component tabs + the active input card
        │    └─ TabUIContainer (tabuihook.jsx) -> TabTracker per type -> Tab (tabclasses.jsx)
        │         └─ Tab.display() -> Modular/Math/InputLayoutGetter -> MathField (<math-field>)
-       ├─ Buttons.jsx          VISUALIZE IT! (showURL), HELP (dispatch 'MOD' HELP), RESET (reload), REPORT BUG
+       ├─ Buttons.jsx          Visualize it (showURL), Help (dispatch 'MOD' HELP), Reset (reload), Report a bug (mailto)
        └─ Modals/RamenModal    one react-bootstrap Modal: QR (type 0), definition (1), help (2), or a raw message
 ```
 
@@ -69,14 +69,26 @@ Validation (`Tab.check_valid`) is shallow. It rejects empty fields, `=`, and the
 
 - `BASE_URL` still points at the old 8th Wall-hosted viewer (`ndlearning.8thwall.app/ar-math-viewer/`), not `realmathAR`.
 - `src/common/utilities/*` (`HelpMessage`, `customPropDiv`, `modal`, `qrModal`) is dead code; nothing imports it.
-- Bootstrap CSS and `stylesheets/main.css` load twice: once from `<link>` tags in `index.html` and again as imports in `src/index.jsx`.
-- `Footer.jsx` uses Font Awesome icon classes, but Font Awesome is never loaded. Its "Report a Problem" link is `#`, and its email link text doesn't match its `mailto:`.
-- The REPORT BUG button's `callback` is `clickTrigger` (visualize). It also mails a student intern address.
+- The "Report a bug" button and the footer's "Report a Problem" link both mail a former student intern (`arodri37@nd.edu`).
+- MathLive can't load its math fonts (`/realmath/assets/fonts` 404s), so it falls back to system fonts. MathLive's `fonts/` directory isn't copied into the build.
 - Help content: the general help says 3 components (the limit is `TAB_LIMIT = 5`). The Vector, Vector Field and Space Curve help entries are placeholders, and the Point help's "valid" example isn't a constant.
 - `ErrorBoundary.componentDidCatch` rethrows.
 - Some JSX uses `class=` instead of `className=` (about 13 places), and several `.map()`s render lists without `key`s. Both cause React warnings.
 - `compute-engine` is imported from a CDN URL (`https://esm.run/...`) in `Buttons.jsx` and `MathField.jsx`, not from npm.
 - `babel-plugin-react-compiler` is installed but not configured.
+
+## Styling (ND Web Theme)
+
+`stylesheets/main.css` implements the Notre Dame Web Theme (NDT): brand tokens in `:root`, with Libre Franklin loaded from Google Fonts in `index.html`. It also bridges Bootstrap's CSS variables (`--bs-primary`, …) to ND colors. Its sections:
+- `site-header`, `skip-links`
+- `rm-app`, `rm-main`, `rm-panel`, `rm-selector-row`
+- `rm-tabs`, `rm-tab`, `rm-tab-panel`
+- `rm-actions`, `rm-btn-label`, `rm-link-btn`, `btn-danger-subtle`
+- `rm-qr-layout`
+- `site-footer`
+- themed Bootstrap buttons and modals
+
+Use these classes and tokens instead of ad-hoc colors. `src/index.jsx` imports Bootstrap's CSS before `main.css`, so the theme overrides Bootstrap. Older utility classes (`light-grey`, `italic`, `bold`, …) still exist for leftover markup.
 
 ## Style
 

@@ -5,9 +5,9 @@ export const SelectorDefine = ({userframe, defineSelection}) =>
     }
 
     return(
-        <div className="d-grid gap-2">
-            <button type="button" className="btn btn-primary" onClick={defineSelectedComponent}>
-                <div className="light-grey italic bold">DEFINE</div>
+        <div className="d-grid">
+            <button type="button" className="btn btn-secondary" onClick={defineSelectedComponent}>
+                <span className="rm-btn-label">Definition</span>
             </button>
         </div>
     )

@@ -45,7 +45,7 @@ export const RamenModal = ({parentState, handleClose, GraphKeys}) =>
 	const getLabel = () => {
 		switch (type) {
 			case 0:
-				return '8th Wall Visualization'
+				return 'AR Visualization'
 				break
 			case 1:
 				return `${GraphKeys[parentState.component]} DEFINITION`
@@ -71,12 +71,23 @@ export const RamenModal = ({parentState, handleClose, GraphKeys}) =>
 				const url = `${BASE_URL}${compressToEncodedURIComponent(parentState.content)}`
 				return(
 					<Modal.Body>
-						<div className="row">
-							Your graph has been sent to the 8th Wall AR visualizer! Scan the QR code with your mobile device to view it. 
-						</div>
-						<div className="row mt-3 gx-0">
-							<div className="col-6 text-start">If you’re already on mobile, just tap <a id="qrLink" href={url}>HERE</a> to view!</div>
-							<div className="col-6"><QRCode value={url} quietZone={5}/></div>
+						<p>
+							Your graph has been sent to the AR visualizer! Scan the QR code with your mobile device to view it.
+						</p>
+						<div className="rm-qr-layout">
+							<div>
+								<p className="mb-2">
+									Already on mobile? Tap{" "}
+									<a id="qrLink" href={url}>here</a>{" "}
+									to open the visualizer.
+								</p>
+								<p className="mb-0 text-secondary" style={{fontSize: "0.9rem"}}>
+									Requires a phone with a camera and gyroscope.
+								</p>
+							</div>
+							<div>
+								<QRCode value={url} quietZone={8} size={160}/>
+							</div>
 						</div>
 					</Modal.Body>
 				)
@@ -105,7 +116,7 @@ export const RamenModal = ({parentState, handleClose, GraphKeys}) =>
 	}
 
 	return (
-		<Modal show={getShow()} onHide={handleClose} size='lg'>
+		<Modal show={getShow()} onHide={handleClose} size='lg' centered>
 			<Modal.Header closeButton>
 				<Modal.Title>{getLabel()}</Modal.Title>
 			</Modal.Header>

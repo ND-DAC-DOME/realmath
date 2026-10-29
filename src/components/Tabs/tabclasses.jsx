@@ -203,13 +203,13 @@ export class Tab
             return(
                 <div className="row mt-3 justify-content-end">
                     <div className="col-lg-2 col-12 mx-2">
-                        <div class="d-grid"><button 
+                        <div className="d-grid"><button 
                             id="deleteComponent" 
                             type="button" 
                             className="btn btn-danger" 
                             onClick={() => {this.parent.setDel()}}
                         >
-                            <div className="light-grey italic bold">REMOVE</div>
+                            <span className="rm-btn-label">Remove</span>
                         </button></div>
                     </div>
                 </div>
