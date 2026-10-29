@@ -1,4 +1,5 @@
 import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 /* helper for math display outside mathlive input */
 export const LatexDisplay = ({str, disp=false}) => {
