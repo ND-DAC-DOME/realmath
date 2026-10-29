@@ -8,7 +8,6 @@ import { RamenModal } from "./Modals/RamenModal"
 import { useRef, useReducer } from "react"
 import { ErrorBoundary } from "./ErrorBoundary"
 
-const BASE_URL = 'https://ndlearning.8thwall.app/ar-math-viewer/'
 /* *********************************
 *   Int switch makes life simpler
 *   * 0 = Function (xyz)
