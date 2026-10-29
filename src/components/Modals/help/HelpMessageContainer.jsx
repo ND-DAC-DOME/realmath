@@ -16,7 +16,7 @@ export const HelpMessage = () => {
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex="0">
                     <div className="justify-content-start">
                         <p>
-                            Realmath is a tool allowing you to visualize up to 5 graphical components in Augmented Reality (AR)! 
+                            Realmath is a tool allowing you to visualize up to 7 graphical components in Augmented Reality (AR)! 
                             It utilizes the <a class="link-opacity-100" href="https://mathlive.io/mathfield/">MathLive</a> library for its input fields, adjusted for the needs of the program. 
                             These input fields can take either LaTeX input or LaTeX shorthand (provided by the on-screen virtual math keyboard). LaTeX input which is copy-pasted into the input field will
                             automatically become shorthand matching the virtual keyboard symbols.

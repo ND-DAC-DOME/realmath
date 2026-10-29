@@ -9,6 +9,10 @@ import { compressToEncodedURIComponent } from 'lz-string'
 /* realmathAR viewer; payload goes in ?z= (see AGENTS.md) */
 const BASE_URL = 'https://nd-dac-dome.github.io/realmathAR/?z='
 
+/* big modules + low error correction keep the code easy for phone cameras to read
+   (a 7-component link is ~360 chars; at 160px/level M the modules were ~2px wide) */
+const QR_SIZE = 300
+
 /* helper */
 const ModalType = (label) => {
 	let type = label
@@ -31,10 +35,17 @@ export const RamenModal = ({parentState, handleClose, GraphKeys}) =>
 {
 	/* LISTEN FOR NEW MODAL */
 	const [type, setType] = useState(1)
+	const [copied, setCopied] = useState(false)
+
+	/* fallback when the QR code won't scan: copy the link to send to a phone */
+	const copyLink = (url) => {
+		navigator.clipboard.writeText(url).then(() => setCopied(true), () => setCopied(false))
+	}
 	useEffect(() => {
 		if (parentState.vis === true) {
 			console.log(`parent called modal visible with label ${parentState.label}`)
 			setType(ModalType(parentState.label))
+			setCopied(false)
 		}
 	}, [parentState.modalCalls])
 	
@@ -82,12 +93,15 @@ export const RamenModal = ({parentState, handleClose, GraphKeys}) =>
 									<a id="qrLink" href={url}>here</a>{" "}
 									to open the visualizer.
 								</p>
-								<p className="mb-0 text-secondary" style={{fontSize: "0.9rem"}}>
+								<p className="mb-3 text-secondary" style={{fontSize: "0.9rem"}}>
 									Requires a phone with a camera and gyroscope.
 								</p>
+								<button type="button" className="btn btn-secondary" onClick={() => copyLink(url)}>
+									<span className="rm-btn-label">{copied ? 'Link copied!' : 'Copy link'}</span>
+								</button>
 							</div>
 							<div>
-								<QRCode value={url} quietZone={8} size={160}/>
+								<QRCode value={url} ecLevel="L" quietZone={12} size={QR_SIZE}/>
 							</div>
 						</div>
 					</Modal.Body>

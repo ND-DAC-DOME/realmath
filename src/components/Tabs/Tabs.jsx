@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useReducer } from 'react'
 import { TabUIContainer } from './tabuihook'
 
 /* useful constants */
-const TAB_LIMIT = 5
+const TAB_LIMIT = 7
 const DELETION_ERROR_MSG = `You cannot delete all components-- empty graphs are considered invalid. Try adding another first!`
 const LIMIT_ERROR_MSG = `There can only be a maximum of ${TAB_LIMIT} components! This is to prevent issues with rendering and latency.`
 const INPUT_ERROR_MSG = `If you are seeing this message, there was a problem with your inputs! 
