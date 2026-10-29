@@ -6,7 +6,8 @@ import Button from 'react-bootstrap/Button'
 import { QRCode } from 'react-qrcode-logo'
 import { compressToEncodedURIComponent } from 'lz-string'
 
-const BASE_URL = 'https://ndlearning.8thwall.app/ar-math-viewer/'
+/* realmathAR viewer; payload goes in ?z= (see AGENTS.md) */
+const BASE_URL = 'https://nd-dac-dome.github.io/realmathAR/?z='
 
 /* helper */
 const ModalType = (label) => {

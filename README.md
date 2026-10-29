@@ -2,6 +2,16 @@
 The user-facing website integrating with the RealMath 8th Wall visualizer app.
 Forks who use a custom repo name should change REPO_NAME in vite.config.js
 
+Live at https://nd-dac-dome.github.io/realmath/. **Visualize it** produces a QR code and link to the [realmathAR](https://github.com/ND-DAC-DOME/realmathAR) viewer at https://nd-dac-dome.github.io/realmathAR/.
+
+```bash
+npm ci
+npm run dev       # http://localhost:5173/realmath/
+npm run deploy    # build + publish dist/ to the gh-pages branch
+```
+
+See [AGENTS.md](./AGENTS.md) for architecture notes.
+
 **Web Design and Development**  
 **Release date:** Fall, 2024
 

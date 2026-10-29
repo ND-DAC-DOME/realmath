@@ -19,10 +19,11 @@ npm run dev       # vite dev server at http://localhost:5173/realmath/
 npm run build     # -> dist/
 npm run preview
 npm run lint      # currently broken: eslint.config.js uses `extends`, which flat config doesn't support
+npm run deploy    # build + push dist/ to the gh-pages branch (GitHub Pages)
 ```
 
 - There are no tests.
-- Deployment: `.github/workflows/static.yml` deploys to GitHub Pages on every push to `main`. The site is served at `https://nd-dac-dome.github.io/realmath/`, which is why `REPO_NAME` in `vite.config.js` is `/realmath/`.
+- Deployment is manual on purpose: there's no CI, and the maintainers want to keep it that way. `npm run deploy` publishes to GitHub Pages from the `gh-pages` branch. The site is served at `https://nd-dac-dome.github.io/realmath/`, which is why `REPO_NAME` in `vite.config.js` is `/realmath/`.
 
 ## Architecture
 
@@ -61,13 +62,12 @@ Tab data lives in mutable class instances (`TabUIContainer` and friends) held in
 ```json
 {"Func": {"Func 1": {"left": "x^2", "right": "z"}}, "Pt": {"Pt 1": {"x": "1", "y": "0", "z": "0"}}}
 ```
-`Vec` props are `{vec: {x,y,z}, init: {x,y,z}}`. The values are raw LaTeX from MathLive, with real backslashes. `RamenModal` (QR case) compresses the JSON with `lz-string`'s `compressToEncodedURIComponent` and appends it to `BASE_URL`. That `BASE_URL` is the one that matters; the copy in `App.jsx` is unused.
+`Vec` props are `{vec: {x,y,z}, init: {x,y,z}}`. The values are raw LaTeX from MathLive, with real backslashes. `RamenModal` (QR case) compresses the JSON with `lz-string`'s `compressToEncodedURIComponent` and appends it to `BASE_URL`, which is `https://nd-dac-dome.github.io/realmathAR/?z=`. realmathAR's `Parser` decompresses the payload and flattens the type grouping. If you change the payload shape, change both repos.
 
 Validation (`Tab.check_valid`) is shallow. It rejects empty fields, `=`, and the string `null`, and it requires a function to contain x, y or z. Real LaTeX validation happens in the viewer.
 
 ## Known issues / gotchas
 
-- `BASE_URL` still points at the old 8th Wall-hosted viewer (`ndlearning.8thwall.app/ar-math-viewer/`), not `realmathAR`.
 - `src/common/utilities/*` (`HelpMessage`, `customPropDiv`, `modal`, `qrModal`) is dead code; nothing imports it.
 - The "Report a bug" button and the footer's "Report a Problem" link both mail a former student intern (`arodri37@nd.edu`).
 - MathLive can't load its math fonts (`/realmath/assets/fonts` 404s), so it falls back to system fonts. MathLive's `fonts/` directory isn't copied into the build.
