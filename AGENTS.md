@@ -4,7 +4,7 @@ Guidance for AI coding agents (and humans) working in this repo.
 
 ## What this is
 
-**realmath** is the input website for RealMath AR. Users build up to 5 graph components (functions, points, vectors, vector fields, space curves) in MathLive math fields, then press **VISUALIZE IT!**. That opens a modal with a QR code and a link to the AR viewer, with the components encoded in the URL.
+**realmath** is the input website for RealMath AR. Users build up to 7 graph components (`TAB_LIMIT` in `Tabs/Tabs.jsx`) (functions, points, vectors, vector fields, space curves) in MathLive math fields, then press **VISUALIZE IT!**. That opens a modal with a QR code and a link to the AR viewer, with the components encoded in the URL.
 
 Related repos:
 - **`ND-DAC-DOME/realmathAR`** is the AR viewer (8th Wall + three.js) that this site links to. Its `AGENTS.md` documents the viewer side of the URL contract.
@@ -64,6 +64,8 @@ Tab data lives in mutable class instances (`TabUIContainer` and friends) held in
 ```
 `Vec` props are `{vec: {x,y,z}, init: {x,y,z}}`. The values are raw LaTeX from MathLive, with real backslashes. `RamenModal` (QR case) compresses the JSON with `lz-string`'s `compressToEncodedURIComponent` and appends it to `BASE_URL`, which is `https://nd-dac-dome.github.io/realmathAR/?z=`. realmathAR's `Parser` decompresses the payload and flattens the type grouping. If you change the payload shape, change both repos.
 
+The QR code is drawn at `QR_SIZE` (300px) with error-correction level `L`. That keeps a 7-component link (about 360 characters) at about 4–5 px per module, so phone cameras read it reliably. At the old 160px, level M, it often failed to scan. Don't shrink it. The modal also has a **Copy link** fallback.
+
 Validation (`Tab.check_valid`) is shallow. It rejects empty fields, `=`, and the string `null`, and it requires a function to contain x, y or z. Real LaTeX validation happens in the viewer.
 
 ## Known issues / gotchas
@@ -71,7 +73,7 @@ Validation (`Tab.check_valid`) is shallow. It rejects empty fields, `=`, and the
 - `src/common/utilities/*` (`HelpMessage`, `customPropDiv`, `modal`, `qrModal`) is dead code; nothing imports it.
 - The "Report a bug" button and the footer's "Report a Problem" link both mail a former student intern (`arodri37@nd.edu`).
 - MathLive can't load its math fonts (`/realmath/assets/fonts` 404s), so it falls back to system fonts. MathLive's `fonts/` directory isn't copied into the build.
-- Help content: the general help says 3 components (the limit is `TAB_LIMIT = 5`). The Vector, Vector Field and Space Curve help entries are placeholders, and the Point help's "valid" example isn't a constant.
+- Help content: the Vector, Vector Field and Space Curve help entries are placeholders, and the Point help's "valid" example isn't a constant.
 - `ErrorBoundary.componentDidCatch` rethrows.
 - Some JSX uses `class=` instead of `className=` (about 13 places), and several `.map()`s render lists without `key`s. Both cause React warnings.
 - `compute-engine` is imported from a CDN URL (`https://esm.run/...`) in `Buttons.jsx` and `MathField.jsx`, not from npm.
