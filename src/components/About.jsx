@@ -1,14 +1,13 @@
-export const About = ({userframe}) =>
-{
-    return(
-        <div className="mb-md-3 mb-0 py-0 justify-content-center">
-            <div className="row">
-                <div className="title">Visualize complex math formulas with RealMath™!</div>
-            </div>
-            <div className="row body-text">
-                Add/define graph components below, then VISUALIZE to watch LaTeX equations come to life in AR on your mobile device. 
-                Boost your understanding and bring abstract math into the real world in seconds!
-            </div>
-        </div>
-    )
-}
+export const About = () => {
+  return (
+    <div className="mb-2">
+      <h1 className="rm-page-title">
+        Visualize complex math formulas with RealMath™
+      </h1>
+      <p className="rm-lede">
+        Add and define graph components below, then visualize. You'll get a QR
+        code and link that open your graph in AR on your phone.
+      </p>
+    </div>
+  );
+};

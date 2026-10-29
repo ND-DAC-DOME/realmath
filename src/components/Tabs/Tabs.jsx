@@ -197,24 +197,30 @@ export const Tabs = ({userframe, parentDispatch, parentState, seturl}) =>
 	}
 			
 	return(
-		<div className="container container-lg mb-3 mt-lg-1">
-			<ul className="nav nav-tabs">
-				<li className="nav-item">
-					<a className="nav-link active tab-text" aria-current="page" href="#">{getName()}</a>
+		<div className="rm-tabs-wrap">
+			<ul className="rm-tabs" role="tablist" aria-label="Graph components">
+				<li role="presentation">
+					<button type="button" className="rm-tab is-active" role="tab" aria-selected="true">
+						{getName()}
+					</button>
 				</li>
-				{
-					<>
-						{(get_unselected()).map((tab) => (
-							<li className="nav-item">
-								<a className="nav-link tab-text" href="#" onClick={(e) => {selectionAction(tab[1], e)}}>
-									{tab[0]}
-								</a>
-							</li>
-						))}
-					</>
-				}
+				{(get_unselected()).map((tab) => (
+					<li key={tab[0]} role="presentation">
+						<button
+							type="button"
+							className="rm-tab"
+							role="tab"
+							aria-selected="false"
+							onClick={(e) => {selectionAction(tab[1], e)}}
+						>
+							{tab[0]}
+						</button>
+					</li>
+				))}
 			</ul>
-			{getCard()}
+			<div className="rm-tab-panel" role="tabpanel">
+				{getCard()}
+			</div>
 		</div>
 	)
 }

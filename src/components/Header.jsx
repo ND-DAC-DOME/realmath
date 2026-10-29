@@ -1,24 +1,28 @@
 import React from "react";
 
-export const Header = ({userframe}) =>
-{
-    const headertext = () =>
-    {
-        return(
-            <div className="d-inline-grid g-0 container-fluid site-title-container">
-                <div className="row subtitle white">
-                    NOTRE DAME LEARNING
-                </div>
-                <div id="site-title " className="row site-title white">
-                    RealMath AR
-                </div>
-            </div>
-        )
-    }
-
-    return(
-        <div className="container-fluid bg-nd-blue mb-2 site-title-color" id="page-top-header">
-            {headertext()}
+export const Header = () => {
+  return (
+    <>
+      <nav className="skip-links" aria-label="Skip links">
+        <a href="#content">Skip To Content</a>
+      </nav>
+      <header id="header" className="site-header">
+        <div className="site-header-inner">
+          <p className="mark-header">
+            <a href="https://www.nd.edu/" aria-label="University of Notre Dame">
+              University of Notre Dame
+            </a>
+          </p>
+          <div className="site-title-group">
+            <p className="site-parent">Notre Dame Learning</p>
+            <p id="site-title" className="site-title">
+              <a href="#content" title="RealMath AR">
+                RealMath AR
+              </a>
+            </p>
+          </div>
         </div>
-    )
-}
+      </header>
+    </>
+  );
+};

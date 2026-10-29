@@ -113,35 +113,37 @@ export default function App({userframe})
     }
 
     return(
-        <div>
+        <div className="rm-app">
             <ErrorBoundary fallback={<p>Something went wrong</p>}>
             <RamenModal 
                 parentState={state} 
                 handleClose={handleClose}
                 GraphKeys={GraphKeys}
             />
-            <Header userframe={userframe}/>
-            <div className="container-lg">
-                <About userframe={userframe}/>
-                <Selector 
-                    parentDispatch={dispatch}
-                    userframe={userframe}
-                    GraphKeys={GraphKeys}
-				/>
-                <Tabs 
-                    parentDispatch={dispatch}
-                    userframe={userframe}
-                    GraphKeys={GraphKeys}
-                    parentState={state}
-                    seturl={seturl}
-                />
+            <Header />
+            <main id="content" className="rm-main">
+                <About />
+                <div className="rm-panel">
+                    <p className="rm-panel-label">Graph components</p>
+                    <Selector 
+                        parentDispatch={dispatch}
+                        userframe={userframe}
+                        GraphKeys={GraphKeys}
+                    />
+                    <Tabs 
+                        parentDispatch={dispatch}
+                        userframe={userframe}
+                        GraphKeys={GraphKeys}
+                        parentState={state}
+                        seturl={seturl}
+                    />
+                </div>
                 <BottomButtons 
-                    userframe={userframe} 
                     parentDispatch={dispatch}
                     showURL={showURL}
                 />
-            </div>
-            <Footer userframe={userframe}/>
+            </main>
+            <Footer />
             </ErrorBoundary>
         </div>
     )

@@ -9,14 +9,14 @@ export const SelectorAdd = ({userframe, addSelection}) =>
     }
 
     return(
-        <div className="d-grid gap-2">
+        <div className="d-grid">
             <button 
                 type="button" 
                 className="btn btn-primary" 
                 id="selectorAdd" 
                 onClick={triggerAddition}
             >
-                <div className="light-grey italic bold">ADD!</div>
+                <span className="rm-btn-label">Add component</span>
             </button>
         </div>
     )

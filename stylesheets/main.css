@@ -1,273 +1,949 @@
+/*
+ * RealMath AR — styled to align with Notre Dame Web Theme (NDT 3.0)
+ * Tokens and patterns from https://webtheme.nd.edu / ndt.css
+ * Brand colors: https://onmessage.nd.edu/university-branding/colors/
+ */
+
 :root {
-   --nd-light-grey: #f0f0f0;
-   --nd-blue: #0C2340;
-   --nd-gold: #AE9142;
-   --bright-blue: #007bff;
-   --light-grey: #f9f9f9;
-   --medium-grey: #777777;
-   --darker-grey: #565656;
-   --white: #FFFFFF;
-   --silver: silver;
-   --default-font: 1.2rem;
-   --keycap-width: 5rem;
-   --keyboard-background: var(--medium-grey);
+  /* NDT brand tokens */
+  --brand-blue: #0c2340;
+  --brand-blue-dark: #081629;
+  --brand-blue-light: #143865;
+  --brand-blue-bright: #1c4f8f;
+  --brand-gold: #ae9142;
+  --brand-gold-dark: #8c7535;
+  --brand-gold-light: #d39f10;
+  --link-blue: #0c2340;
+  --gray: #555;
+  --gray-dark: #333;
+  --gray-light: #d2d2d2;
+  --gray-extra-light: #e2e2e2;
+  --gray-extra-extra-light: #f2f2f2;
+  --sky-blue: #e1e8f2;
+  --sky-blue-light: #edf2f9;
+  --sky-blue-dark: #c1cddd;
+  --white: #ffffff;
+  --anim-duration: 325ms;
+  --anim-duration-fast: 125ms;
+  --anim-ease: ease-in-out;
+
+  /* Fonts (NDT stacks; Libre Franklin via Google Fonts) */
+  --font-default: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+  --font-heading: "Libre Franklin", "Arial Narrow", "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+
+  /* Legacy aliases used across the app */
+  --nd-blue: var(--brand-blue);
+  --nd-gold: var(--brand-gold);
+  --nd-light-grey: #f0f0f0;
+  --bright-blue: var(--brand-blue-bright);
+  --light-grey: var(--sky-blue-light);
+  --medium-grey: var(--gray);
+  --darker-grey: var(--gray-dark);
+  --silver: silver;
+  --default-font: 1rem;
+  --keycap-width: 5rem;
+  --keyboard-background: var(--medium-grey);
+
+  /* Bootstrap theme bridge */
+  --bs-primary: var(--brand-blue);
+  --bs-primary-rgb: 12, 35, 64;
+  --bs-secondary: var(--brand-blue-light);
+  --bs-secondary-rgb: 20, 56, 101;
+  --bs-body-font-family: var(--font-default);
+  --bs-body-color: var(--gray-dark);
+  --bs-link-color: var(--brand-blue-bright);
+  --bs-link-hover-color: var(--brand-blue);
+  --bs-border-radius: 0.6em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
-   font-size: 1.4rem;
+  font-size: 100%;
+  scroll-behavior: smooth;
 }
 
-/* Hide the virtual keyboard toggle */
+body {
+  margin: 0;
+  color: var(--gray-dark);
+  font-family: var(--font-default);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--white);
+  text-align: left;
+}
+
+/* App shell */
+.rm-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(180deg, var(--sky-blue-light) 0%, var(--white) 18rem);
+}
+
+.rm-main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+@media (min-width: 48em) {
+  .rm-main {
+    padding: 2rem 2rem 3rem;
+  }
+}
+
+/* Hide the virtual keyboard toggle (MathLive) */
 math-field::part(virtual-keyboard-toggle) {
   display: none;
 }
 
-.katex-display { overflow: auto hidden }
-
-* {
-   font-family: "Instrument Sans", sans-serif;
-   font-optical-sizing: auto;
-   font-weight: 400;
-   font-style: normal;
-   font-size: var(--default-font);
-   font-variation-settings:"wdth" 100;
-   text-align: center;
-   color:var(--nd-blue);
-   --keycap-background:var(--light-grey);
-   --keycap-text:var(--nd-blue);
+math-field {
+  font-family: var(--font-default);
+  border: 1px solid var(--gray-light) !important;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--white);
+  min-height: 3rem;
+  --keycap-background: var(--sky-blue-light);
+  --keycap-text: var(--brand-blue);
 }
 
-/* 
-======================================================
-   TEXT STYLES
-======================================================
-*/
-.semibold, .subtitle {
-   font-weight: 650;
+math-field:focus-within {
+  border-color: var(--brand-blue-bright) !important;
+  outline: 3px solid rgba(28, 79, 143, 0.25);
+  outline-offset: 1px;
 }
 
-.bold, .title, .site-title, .btntxt {
-   font-weight: 900;
+/* -------------------------------------------------------------------------- */
+/* Typography                                                                  */
+/* -------------------------------------------------------------------------- */
+
+.rm-page-title {
+  margin: 0 0 0.5rem;
+  color: var(--brand-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
 }
 
-.title, .italic, .btntxt {
-   font-style: italic;
+.rm-page-title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 4px;
+  margin: 0.45em 0 0;
+  background-color: var(--brand-gold);
 }
 
-.tab-text {
-   font-size: 0.75rem;
-   color: black;
+.rm-lede {
+  margin: 0 0 1.75rem;
+  max-width: 42rem;
+  color: var(--gray);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  text-align: left;
 }
 
-.title {
-   font-size: 1.25em;
-   line-height: 1.25em;
+.semibold,
+.subtitle,
+.mobile-subtitle {
+  font-weight: 650;
 }
 
-.site-title-container {
-   position: relative;
-   top: -0.325rem;
-   margin-left: 0;
-   place-items: center;
+.bold,
+.title,
+.mobile-title,
+.mobile-site-title,
+.site-title,
+.btntxt {
+  font-weight: 700;
+}
+
+.title,
+.mobile-title {
+  color: var(--brand-gold);
+  font-style: normal;
 }
 
 .site-title {
-   position:relative;
-   top: -0.35em;
-   font-size: 10vw;
-   margin-top: 0;
+  font-size: 2.25rem;
 }
 
 .subtitle {
-   font-size: 4vw;
-   margin-bottom: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.site-title-color {
-   max-height: 17vw;
-   padding-bottom: 1rem;
-   padding-top: 0;
+.mobile-site-title {
+  font-size: 1.5rem;
 }
 
-.body-text {
-   padding: 1em;
-   font-size: 0.85em;
-   text-align: justify;
-   text-align-last: center;
+.mobile-title,
+.mobile-subtitle {
+  font-size: 1.05rem;
 }
 
-/* 
-======================================================
-   TEXT STYLE RESPONSIVE BREAKPOINTS
-======================================================
-*/
- @media (min-width: 446px) {
-   .site-title-container {
-      position: static;
-   }
+.mobile-body {
+  font-size: 0.95rem;
 }
-
- @media (min-width: 750px) {
-   .site-title-container {
-      margin-left: 3rem;
-      place-items: start;
-   }
-   .site-title {
-      font-size: 5vw;
-   }
-   .subtitle {
-      font-size: 1.75vw;
-   }
-   .title {
-      font-size: 2em;
-   }
-   .site-title-color {
-      max-height: 10vw;
-   }
- }
-
- @media (min-width: 938px) {
-   .site-title-color {
-      max-height: 8vw;
-   }
- }
 
 .text-larger {
-   font-size: 110%;
+  font-size: 110%;
 }
 
 .letter-spacing {
-   letter-spacing: 1px;
+  letter-spacing: 1px;
 }
 
-.display-5 {
-   font-size: 2.5rem;
-   font-weight: 300;
-}
-
-.display-6 {
-   font-size: 1.5rem;
-   font-weight: 300;
-}
-
-.nav-link.active {
-   background: var(--light-grey) !important;
-   opacity: .85;
-}
-
-#implicit-equation-field {
-   font-size: 1.5rem;
-}
-
-.pointer {
-   cursor: pointer;
-}
-
-.tablikes {
-   color: var(--nd-gold);
-   text-transform: all-caps;
-}
-
-
-/* Tooltips ------------------------------------------ */
-/* Style the tooltip */
-.custom-tooltip {
-   font-size: .85rem !important;
-   border-radius: 3px !important;
-   --bs-tooltip-bg: var(--darker-grey);
-   --bs-tooltip-color: var(--white);
-}
-
-/* hide the tooltip arrow */
-.tooltip .tooltip-arrow {
-   display: none;
-}
-
-/* color --------------------------------------------- */
-.nd-gold, .title,  .mobile-title, .subtitle {
-   color: var(--nd-gold);
+.nd-gold {
+  color: var(--brand-gold);
 }
 
 .nd-blue {
-   color: var(--nd-blue);
+  color: var(--brand-blue);
 }
 
 .darker-grey {
-   color: var(--darker-grey);
+  color: var(--gray-dark);
 }
 
 .white {
-   color: var(--white);
+  color: var(--white);
 }
 
 .bright-blue {
-   color: var(--bright-blue);
+  color: var(--brand-blue-bright);
 }
 
-.light-grey, .btntxt {
-   color: var(--light-grey);
+.light-grey {
+  color: var(--sky-blue-light);
 }
 
 .bg-light-grey {
-   background: var(--light-grey);
+  background: var(--sky-blue-light);
 }
 
 .text-silver {
-   color: var(--silver);
+  color: var(--silver);
 }
 
 .bg-nd-blue {
-   background: var(--nd-blue);
+  background: var(--brand-blue);
 }
 
-/* Reset modal dialog box ---------------------------- */
+.pointer {
+  cursor: pointer;
+}
+
+.tablikes {
+  color: var(--brand-gold);
+  text-transform: uppercase;
+}
+
+#implicit-equation-field {
+  font-size: 1.5rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Site header (NDT pattern)                                                   */
+/* -------------------------------------------------------------------------- */
+
+.site-header {
+  background: var(--brand-blue);
+  border-top: 5px solid var(--brand-gold);
+  border-bottom: 5px solid var(--brand-blue-dark);
+  color: var(--white);
+  padding: 0 0 1.25rem;
+}
+
+.mark-header {
+  width: 100%;
+  margin: 0 0 1rem;
+  height: 3rem;
+  position: relative;
+}
+
+.mark-header a {
+  display: block;
+  height: 47px;
+  margin: 0 auto;
+  color: #fff;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url("https://static.nd.edu/images/brandbar/dept-nd-white.svg") 50% 54% / 300px auto no-repeat;
+  background-color: var(--brand-blue-dark);
+}
+
+.mark-header a:focus {
+  outline: 3px solid #15a6b5;
+  outline-offset: 5px;
+}
+
+.site-title-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0 5vw;
+  text-align: left;
+}
+
+.site-parent {
+  margin: 0 0 0.35rem;
+  color: var(--gray-light);
+  font-family: var(--font-default);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.site-header .site-title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.site-header .site-title a,
+.site-header .site-title a:hover,
+.site-header .site-title a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.site-header .site-title a:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+@media (min-width: 48em) {
+  .site-header {
+    padding: 2.5rem 0 1.75rem;
+  }
+
+  .site-header-inner {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    align-items: start;
+    gap: 1.5rem;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .mark-header {
+    width: 200px;
+    height: auto;
+    margin: 0;
+    order: 2;
+  }
+
+  .mark-header a {
+    width: 200px;
+    height: 60px;
+    margin: 0;
+    background: url("https://static.nd.edu/images/marks/gold-white/ndmark.svg") 50% 50% / contain no-repeat;
+    background-color: transparent;
+  }
+
+  .site-title-group {
+    padding: 0;
+    order: 1;
+  }
+}
+
+/* Skip link */
+.skip-links {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+}
+
+.skip-links a:focus {
+  left: 0.5em;
+  top: 0.5em;
+  position: absolute;
+  width: auto;
+  height: auto;
+  padding: 0.5em 1em;
+  background: #fff;
+  color: var(--brand-blue);
+  font-weight: 700;
+  box-shadow: 0 0 10px #000;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Composer panel                                                              */
+/* -------------------------------------------------------------------------- */
+
+.rm-panel {
+  background: var(--white);
+  border: 1px solid var(--sky-blue-dark);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 0 rgba(12, 35, 64, 0.04);
+}
+
+.rm-panel-label {
+  margin: 0 0 0.75rem;
+  color: var(--gray);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.rm-selector-row {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 62em) {
+  .rm-selector-row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: stretch;
+  }
+}
+
+.rm-eq-equals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--brand-blue);
+  padding: 0.25rem 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Buttons (NDT-inspired, Bootstrap-compatible)                                */
+/* -------------------------------------------------------------------------- */
+
+.btn {
+  font-family: var(--font-default);
+  font-weight: 600;
+  border-radius: 0.6em;
+  border-width: 3px;
+  border-style: solid;
+  border-color: transparent;
+  transition: all var(--anim-duration-fast) var(--anim-ease);
+  text-decoration: none;
+}
+
+.btn:focus-visible {
+  outline: none;
+  border-color: #15a6b5;
+  box-shadow: none;
+}
+
+.btn-primary,
+.btn-primary:visited {
+  background-color: var(--brand-blue) !important;
+  border-color: var(--brand-blue) !important;
+  color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--brand-blue-light) !important;
+  border-color: var(--brand-blue-light) !important;
+  color: #fff !important;
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  background-color: var(--brand-blue-dark) !important;
+  border-color: var(--brand-blue-dark) !important;
+}
+
+.btn-secondary,
+.btn-secondary:visited {
+  background-color: var(--sky-blue-light) !important;
+  border-color: var(--sky-blue-light) !important;
+  color: var(--brand-blue) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--sky-blue) !important;
+  border-color: var(--sky-blue) !important;
+  color: var(--brand-blue) !important;
+  transform: scale(1.02);
+}
+
+.btn-outline-secondary {
+  background-color: transparent !important;
+  border-color: var(--sky-blue-dark) !important;
+  color: var(--brand-blue) !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  background-color: var(--sky-blue-light) !important;
+  border-color: var(--brand-blue) !important;
+  color: var(--brand-blue) !important;
+}
+
+.btn-danger-subtle {
+  background-color: transparent !important;
+  border-color: var(--gray-light) !important;
+  color: var(--gray-dark) !important;
+}
+
+.btn-danger-subtle:hover {
+  background-color: #f8e8e8 !important;
+  border-color: #c45c5c !important;
+  color: #8a1f1f !important;
+}
+
+.rm-btn-label {
+  color: inherit;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.rm-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 62em) {
+  .rm-actions {
+    grid-template-columns: minmax(12rem, 1.4fr) repeat(3, minmax(0, 1fr));
+  }
+}
+
+.rm-actions .btn-primary {
+  min-height: 3rem;
+}
+
+.rm-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6em 1.25em;
+  border: 3px solid var(--sky-blue-dark);
+  border-radius: 0.6em;
+  background: transparent;
+  color: var(--brand-blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--anim-duration-fast) var(--anim-ease);
+}
+
+.rm-link-btn:hover {
+  background: var(--sky-blue-light);
+  border-color: var(--brand-blue);
+  color: var(--brand-blue);
+  transform: scale(1.02);
+}
+
+/* Form select */
+.form-select {
+  border: 1px solid var(--gray-light);
+  border-radius: 0.6em;
+  color: var(--brand-blue);
+  font-family: var(--font-default);
+  min-height: 2.75rem;
+  padding: 0.55rem 2.25rem 0.55rem 0.9rem;
+  background-color: var(--white);
+}
+
+.form-select:focus {
+  border-color: var(--brand-blue-bright);
+  box-shadow: 0 0 0 0.2rem rgba(28, 79, 143, 0.2);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tabs                                                                        */
+/* -------------------------------------------------------------------------- */
+
+.rm-tabs {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  border-bottom: 2px solid var(--sky-blue-dark);
+}
+
+.rm-tabs li {
+  margin: 0;
+}
+
+.rm-tab {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  margin-bottom: -2px;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: transparent;
+  color: var(--brand-blue);
+  font-family: var(--font-default);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--anim-duration-fast) var(--anim-ease);
+}
+
+.rm-tab:hover {
+  background: var(--sky-blue-light);
+  color: var(--brand-blue);
+}
+
+.rm-tab.is-active {
+  background: var(--sky-blue-light);
+  border-color: var(--sky-blue-dark);
+  border-bottom-color: var(--brand-gold);
+  color: var(--brand-blue);
+  font-weight: 700;
+}
+
+.rm-tab-panel {
+  padding: 1.25rem 0 0.5rem;
+}
+
+.nav-link.active {
+  background: var(--sky-blue-light) !important;
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tooltips                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.custom-tooltip {
+  font-size: 0.85rem !important;
+  border-radius: 3px !important;
+  --bs-tooltip-bg: var(--gray-dark);
+  --bs-tooltip-color: var(--white);
+}
+
+.tooltip .tooltip-arrow {
+  display: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Modals                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.modal-content {
+  border: none;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.modal-header {
+  background: var(--brand-blue);
+  color: #fff;
+  border-bottom: 4px solid var(--brand-gold);
+}
+
+.modal-header .modal-title {
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.modal-header .btn-close {
+  filter: invert(1) grayscale(100%);
+  opacity: 0.85;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+  text-align: left;
+  color: var(--gray-dark);
+}
+
+.modal-body ul {
+  padding-left: 1.25rem;
+  text-align: left;
+}
+
+.modal-body li {
+  margin-bottom: 0.65rem;
+  text-align: left;
+}
+
+.rm-qr-layout {
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+@media (min-width: 36em) {
+  .rm-qr-layout {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.rm-qr-layout a {
+  color: var(--brand-blue-bright);
+  font-weight: 600;
+}
+
+/* jQuery UI dialog (reset modal) */
 #dialog-confirm {
-   font-size: 1rem;
+  font-size: 1rem;
 }
 
 .ui-widget {
-   font-family: 'Figtree', Arial, sans-serif;
+  font-family: var(--font-default);
 }
 
 .ui-widget-content {
-   background: var(--white);
-   border: none;
-   padding: 1rem;
-   border-radius: 8px;
+  background: var(--white);
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
 }
 
 .ui-widget-header {
-   /* background: rgba(0, 0, 0, .08); */
-   margin-bottom: 1rem;
-   font-weight: bold;
+  background: none;
+  border: none;
+  margin-bottom: 1rem;
+  font-weight: bold;
 }
 
 .ui-dialog .ui-dialog-buttonpane {
-   font-size: 1rem !important;
-   margin-top: 0;
-   /* padding: .3em 1em .5em .4em; */
+  font-size: 1rem !important;
+  margin-top: 0;
 }
 
 .ui-dialog-buttonset .btn-default {
-   color: var(--bright-blue);
-   /* background: rgba(0, 0, 0, .05); */
-}
-
-/* Style the reset modal ---------------  */
-.ui-widget-header {
-   background: none;
-   border: none;
+  color: var(--brand-blue-bright);
 }
 
 .ui-widget-overlay {
-   background: black;
-   opacity: .7;
+  background: black;
+  opacity: 0.7;
 }
 
 .ui-sortable-helper {
-   margin-left: 3rem;
+  margin-left: 3rem;
 }
 
 .ui-state-highlight {
-   background: var(--alice-blue) !important;
+  background: var(--sky-blue-light) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Site footer (NDT pattern)                                                   */
+/* -------------------------------------------------------------------------- */
+
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  background: var(--brand-blue);
+  color: #fff;
+  margin-top: auto;
+}
+
+.footer-org {
+  padding: 2.5rem 5vw 2rem;
+}
+
+.footer-breadcrumbs {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.footer-breadcrumbs a {
+  color: var(--sky-blue-dark);
+  text-decoration: none;
+}
+
+.footer-breadcrumbs a:hover {
+  color: var(--sky-blue);
+}
+
+.site-footer .site-link {
+  display: inline-block;
+  margin: 0.3em 0 0.75em;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.site-footer .site-link:hover {
+  color: var(--sky-blue);
+}
+
+.footer-contacts {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.footer-contacts a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-contacts a:hover {
+  color: var(--sky-blue);
+  text-decoration: underline;
+}
+
+.footer-phone,
+.footer-email {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.footer-utility {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.footer-utility a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-utility a:hover {
+  color: var(--sky-blue);
+}
+
+.copyright {
+  margin: 1.5rem 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+}
+
+.copyright a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+
+.copyright a:hover {
+  color: #fff;
+}
+
+.footer-parent {
+  background: var(--brand-blue-dark);
+  padding: 2rem 5vw;
+  text-align: center;
+}
+
+.mark-footer {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+}
+
+.mark-footer img {
+  width: min(250px, 80vw);
+  height: auto;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+  color: var(--sky-blue);
+  text-decoration: underline;
+}
+
+.footer-social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+}
+
+.footer-social a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.footer-social a:hover {
+  color: #fff;
+}
+
+@media (min-width: 48em) {
+  .site-footer {
+    flex-direction: row;
+  }
+
+  .footer-org {
+    flex: 1 1 65%;
+    padding: 3rem 2.5rem 2.5rem 5vw;
+  }
+
+  .footer-parent {
+    flex: 0 0 35%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3rem 2rem 2.5rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}
+
+/* MathLive keyboard icons */
+.ML__virtual-keyboard-toggle,
+.ML__menu-toggle {
+  color: var(--brand-blue-bright) !important;
+}
+
+/* Wide display-mode math in definitions scrolls instead of overflowing */
+.katex-display {
+  overflow: auto hidden;
 }

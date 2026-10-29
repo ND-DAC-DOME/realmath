@@ -1,9 +1,6 @@
 import "https://esm.run/@cortex-js/compute-engine";
-import { DGridButton } from './Modular/Buttons/DGridButton'
 
-const ButtonTextClass = "light-grey italic bold"
-
-export const BottomButtons = ({userframe, parentDispatch, showURL}) =>
+export const BottomButtons = ({parentDispatch, showURL}) =>
 {
     /* call content trigger */
     const clickTrigger = () => {
@@ -26,30 +23,20 @@ export const BottomButtons = ({userframe, parentDispatch, showURL}) =>
         window.location.reload()
     }
 
-    const TheseButtons = (container, className, color, id, callback, label) => {
-        return  {
-                    container: container,
-                    className: className,
-                    color: color,
-                    id: id,
-                    callback: callback,
-                    label: label,
-                }
-    }
-
-    const ButtonProps = [
-                            TheseButtons("col-lg-5 col-12 mb-2", ButtonTextClass, "primary", "visualizeButton", clickTrigger, "VISUALIZE IT!"),
-                            TheseButtons("col-lg-2 col-6 mb-2", ButtonTextClass, "secondary", "helpButton", getHelp, "HELP"),
-                            TheseButtons("col-lg-2 col-6 mb-2", ButtonTextClass, "secondary", "resetButton", reload, "RESET"),
-                            TheseButtons("col-lg-3 col-12 mb-2", null, "secondary", "reportButton", clickTrigger, (()=>{return(<a className="light-grey italic bold" href="mailto:arodri37@nd.edu">REPORT BUG</a>)})),
-                        ]
-
     return (
-        <div className="container-fluid">
-            <div className="row">
-                {ButtonProps.map((props) => (DGridButton({...props})))}
-            </div>
+        <div className="rm-actions">
+            <button type="button" className="btn btn-primary" id="visualizeButton" onClick={clickTrigger}>
+                <span className="rm-btn-label">Visualize it</span>
+            </button>
+            <button type="button" className="btn btn-secondary" id="helpButton" onClick={getHelp}>
+                <span className="rm-btn-label">Help</span>
+            </button>
+            <button type="button" className="btn btn-danger-subtle" id="resetButton" onClick={reload}>
+                <span className="rm-btn-label">Reset</span>
+            </button>
+            <a className="rm-link-btn" id="reportButton" href="mailto:arodri37@nd.edu">
+                Report a bug
+            </a>
         </div>
     )
-    
 }
