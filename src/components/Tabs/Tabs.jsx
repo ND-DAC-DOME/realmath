@@ -176,47 +176,135 @@ export const Tabs = ({userframe, parentDispatch, parentState, seturl}) =>
         }
 	}
 
-    const getName = () => {
-        console.log('getting selected name')
-        try {
-            return tabs.current.get_at(state.selected).name
-        } catch (e) {
-            console.error(`error with displaying name: ${e}`)
-            return `N/A`
-        }
-    }
+	/* ****************************************
+	REORDERING (drag and drop) AND RENAMING
+	**************************************** */
+	const [, rerender] = useReducer((n) => n + 1, 0)
+	const [dragFrom, setDragFrom] = useState(null)
+	const [dragOver, setDragOver] = useState(null)
+	const [editing, setEditing] = useState(null)   // id of the tab being renamed
+	const editDone = useRef(false)
 
-	const get_unselected = () => {
+	const endDrag = () => {
+		setDragFrom(null)
+		setDragOver(null)
+	}
+
+	const dropAt = (to) => {
+		if (dragFrom !== null) {
+			tabs.current.move(dragFrom, to)
+			rerender()
+		}
+		endDrag()
+	}
+
+	const startEdit = (id) => {
+		editDone.current = false
+		setEditing(id)
+	}
+
+	const finishEdit = (loc, value, commit) => {
+		if (editDone.current) {
+			return
+		}
+		editDone.current = true
+		setEditing(null)
+		if (commit) {
+			const error = tabs.current.rename(loc, value)
+			if (error !== null) {
+				sendModal('RENAME ERROR', error)
+			} else {
+				sendURL()
+			}
+		}
+	}
+
+	const get_tabs = () => {
 		try {
-			const unselected = tabs.current.get_unselected()
-			return unselected
+			return tabs.current.get_tabs()
 		} catch (e) {
-			console.error(`Error in Tabs.get_unselected: ${e}`)
+			console.error(`Error in Tabs.get_tabs: ${e}`)
 			return []
 		}
 	}
-			
+
+	const isSelected = (loc) => loc[0] === state.selected[0] && loc[1] === state.selected[1]
+
+	const dropClass = (i) => {
+		if (dragFrom === null || dragOver !== i || dragOver === dragFrom) {
+			return ''
+		}
+		return dragOver < dragFrom ? ' is-drop-before' : ' is-drop-after'
+	}
+
 	return(
 		<div className="rm-tabs-wrap">
 			<ul className="rm-tabs" role="tablist" aria-label="Graph components">
-				<li role="presentation">
-					<button type="button" className="rm-tab is-active" role="tab" aria-selected="true">
-						{getName()}
-					</button>
-				</li>
-				{(get_unselected()).map((tab) => (
-					<li key={tab[0]} role="presentation">
-						<button
-							type="button"
-							className="rm-tab"
-							role="tab"
-							aria-selected="false"
-							onClick={(e) => {selectionAction(tab[1], e)}}
+				{get_tabs().map((tab, i) => {
+					const active = isSelected(tab.loc)
+					return (
+						<li
+							key={tab.id}
+							role="presentation"
+							className={`rm-tab-item${dragFrom === i ? ' is-dragging' : ''}${dropClass(i)}`}
+							draggable={editing !== tab.id}
+							onDragStart={(e) => {
+								e.dataTransfer.effectAllowed = 'move'
+								e.dataTransfer.setData('text/plain', tab.id)
+								setDragFrom(i)
+							}}
+							onDragOver={(e) => {
+								if (dragFrom === null) return
+								e.preventDefault()
+								e.dataTransfer.dropEffect = 'move'
+								if (dragOver !== i) setDragOver(i)
+							}}
+							onDrop={(e) => {
+								e.preventDefault()
+								dropAt(i)
+							}}
+							onDragEnd={endDrag}
 						>
-							{tab[0]}
-						</button>
-					</li>
-				))}
+							{editing === tab.id ? (
+								<input
+									type="text"
+									className="rm-tab rm-tab-input is-active"
+									aria-label={`Rename ${tab.name}`}
+									defaultValue={tab.name}
+									maxLength={30}
+									size={Math.max(tab.name.length, 6)}
+									autoFocus
+									onFocus={(e) => e.target.select()}
+									onKeyDown={(e) => {
+										if (e.key === 'Enter') finishEdit(tab.loc, e.target.value, true)
+										if (e.key === 'Escape') finishEdit(tab.loc, null, false)
+									}}
+									onBlur={(e) => finishEdit(tab.loc, e.target.value, true)}
+								/>
+							) : (
+								<button
+									type="button"
+									className={`rm-tab${active ? ' is-active' : ''}`}
+									role="tab"
+									aria-selected={active}
+									title={active ? 'Click to rename. Drag to reorder.' : 'Drag to reorder.'}
+									onClick={(e) => {
+										if (active) {
+											e.preventDefault()
+											startEdit(tab.id)
+										} else {
+											selectionAction(tab.loc, e)
+										}
+									}}
+									onDoubleClick={() => startEdit(tab.id)}
+								>
+									{tab.name}
+									{active && <span className="rm-tab-edit" aria-hidden="true">✎</span>}
+								</button>
+							)}
+						</li>
+					)
+				})}
 			</ul>
 			<div className="rm-tab-panel" role="tabpanel">
 				{getCard()}

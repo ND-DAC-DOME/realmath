@@ -57,7 +57,8 @@ export class Tab
         this.parent = parent
         this.index = parent.index
         this.type = InputCards[parent.type].alias
-        this.name = `${parent.type} ${parent.index}`
+        this.name = `${parent.type} ${parent.index}`   // stable id, also the payload key
+        this.label = null                               // user-chosen display name, if renamed
         this.card = InputCards[parent.type].card
         this.props = {...InputCards[parent.type].props}
         this.selected = numtabs === 0 ? true : false
@@ -70,6 +71,9 @@ export class Tab
     }
     deselect () {
         this.selected = false
+    }
+    get_name () {
+        return this.label ?? this.name
     }
     get_loc () {
         return [this.parent.type, this.index]
@@ -290,7 +294,8 @@ export class TabTracker
 		try {
 			for (const key in this.current) {
 				if (this.current[key].check_valid() === true) {
-					tempDict[this.current[key].name] = this.current[key].props
+					const tab = this.current[key]
+					tempDict[tab.name] = tab.label === null ? tab.props : {...tab.props, label: tab.label}
 				} else {
 				    throw new Error(`Tab at index ${key} in the ${this.type} tracker has invalid input.`)
                 }

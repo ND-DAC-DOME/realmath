@@ -34,9 +34,6 @@ export const BottomButtons = ({parentDispatch, showURL}) =>
             <button type="button" className="btn btn-danger-subtle" id="resetButton" onClick={reload}>
                 <span className="rm-btn-label">Reset</span>
             </button>
-            <a className="rm-link-btn" id="reportButton" href="mailto:arodri37@nd.edu">
-                Report a bug
-            </a>
         </div>
     )
 }
