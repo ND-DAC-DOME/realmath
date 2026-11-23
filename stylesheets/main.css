@@ -624,6 +624,55 @@ math-field:focus-within {
   font-weight: 700;
 }
 
+/* tab reordering (drag and drop) and renaming */
+.rm-tab-item {
+  position: relative;
+  cursor: grab;
+}
+
+.rm-tab-item.is-dragging {
+  opacity: 0.45;
+}
+
+.rm-tab-item.is-drop-before::before,
+.rm-tab-item.is-drop-after::after {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--brand-gold);
+}
+
+.rm-tab-item.is-drop-before::before {
+  left: -0.25rem;
+}
+
+.rm-tab-item.is-drop-after::after {
+  right: -0.25rem;
+}
+
+.rm-tab-edit {
+  margin-left: 0.4rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.rm-tab.is-active:hover .rm-tab-edit {
+  opacity: 1;
+}
+
+.rm-tab-input {
+  cursor: text;
+  outline: none;
+  min-width: 6ch;
+}
+
+.rm-tab-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(28, 79, 143, 0.2);
+}
+
 .rm-tab-panel {
   padding: 1.25rem 0 0.5rem;
 }

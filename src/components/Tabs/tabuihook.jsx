@@ -1,5 +1,7 @@
 import { TabTracker } from "./tabclasses";
 
+const LABEL_MAX = 30
+
 export class TabUIContainer {
     constructor (setDel) {
         this.Trackers = {
@@ -9,25 +11,32 @@ export class TabUIContainer {
             VFld: new TabTracker('VFld', setDel),
             SCrv: new TabTracker('SCrv', setDel),
         }
-        this.Unselected = {}
-        this.Next = null
+        /* tabs in display order: insertion order, changed only by move() */
+        this.Order = [this.Trackers.Func.get_latest()]
     }
-    
+
     add (type, numTabs) {
 		try {
 			this.Trackers[type].add(numTabs)
-			this.Next = this.Trackers[type].get_latest()
-			this.Unselected[this.Trackers[type].get_latest().name] = this.Trackers[type].get_latest()
+			this.Order.push(this.Trackers[type].get_latest())
 			return (numTabs + 1)
 		} catch (e) {
 			console.error(`Error in TabsList.add(): ${e}`)
 			return -1
 		}
     }
-    
+
+    /* deletes the tab at loc and selects its neighbor (the next tab, or the previous one if it was last) */
     del (loc) {
 		try {
-			return this.get_selected(loc, null, true)
+			const prev = this.get_at(loc)
+			const idx = this.Order.indexOf(prev)
+			this.Order.splice(idx, 1)
+			prev.deselect()
+			prev.parent.del(prev.index)
+			const curr = this.Order[Math.min(idx, this.Order.length - 1)]
+			curr.select()
+			return curr
 		} catch (e) {
 			console.error(`Error in TabUIContainer.del(): ${e}`)
 			return -1
@@ -37,31 +46,13 @@ export class TabUIContainer {
 	get_at (loc) {
 		return this.Trackers[loc[0]].get_at(loc[1])
 	}
-    
-    get_selected (loc, newloc, del = false) {
+
+    get_selected (loc, newloc) {
 		try {
-			/* get tab objects */
 			const prev = this.get_at(loc)
-			const curr = del === true ? this.Next : this.get_at(newloc)
-			/* delete new selection from set of unselected tabs */
-			delete this.Unselected[curr.name]
-			/* point to a new 'Next' tab if necessary */
-			const unselectedNames = Object.keys(this.Unselected)
-			if (curr === this.Next) {
-				this.Next = unselectedNames.length > 1 ? this.Unselected[unselectedNames[1]] : null
-			}
-			/* deselect currently selected tab */
+			const curr = this.get_at(newloc)
 			prev.deselect()
-			/* if no deletion requested, push it to list of unselected tabs */
-			/* otherwise, get its parent and call for deletion */
-			if (del === false) {   
-				this.Unselected[prev.name] = prev
-			} else {
-				prev.parent.del(prev.index)
-			}
-			/* apply appropriate flag to new selection */
 			curr.select()
-			/* set new selection */
 			return curr
 		} catch (e) {
 			console.error(`Error in TabUIContainer.get_selected(): ${e}`)
@@ -69,18 +60,39 @@ export class TabUIContainer {
 		}
     }
 
-    get_unselected () {
-		const returnList = []
-        try {
-			for (const [key, value] of Object.entries(this.Unselected)) {
-				returnList.push([key, value.get_loc()])
-			}
-        } catch (e) {
-            console.error(`Error in TabUIContainer.get_unselected(): ${e}`)
-        }
-		return returnList
-    }
-	
+	/* [{id, name, loc}] in display order; id is the stable internal name, name is what the user sees */
+	get_tabs () {
+		return this.Order.map((tab) => ({id: tab.name, name: tab.get_name(), loc: tab.get_loc()}))
+	}
+
+	/* moves the tab at display index `from` to display index `to` */
+	move (from, to) {
+		if (from === to || from < 0 || to < 0 || from >= this.Order.length || to >= this.Order.length) {
+			return
+		}
+		const [tab] = this.Order.splice(from, 1)
+		this.Order.splice(to, 0, tab)
+	}
+
+	/* renames the tab at loc; returns null on success or an error message. an empty name restores the default */
+	rename (loc, label) {
+		const tab = this.get_at(loc)
+		const trimmed = `${label ?? ''}`.trim().replace(/\s+/g, ' ')
+		if (trimmed.length === 0 || trimmed === tab.name) {
+			tab.label = null
+			return null
+		}
+		if (trimmed.length > LABEL_MAX) {
+			return `Component names can be at most ${LABEL_MAX} characters long.`
+		}
+		const taken = this.Order.some((other) => other !== tab && other.get_name().toLowerCase() === trimmed.toLowerCase())
+		if (taken) {
+			return `Another component is already named "${trimmed}". Please choose a different name.`
+		}
+		tab.label = trimmed
+		return null
+	}
+
 	stringify_tabs () {
 		console.log('running stringify')
 		const tempDict = {}

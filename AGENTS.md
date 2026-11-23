@@ -48,6 +48,8 @@ So to trigger something, dispatch the action that bumps the right counter.
 
 Tab data lives in mutable class instances (`TabUIContainer` and friends) held in a `useRef`, not in React state. `Tab.update` reads the MathLive values straight from the DOM by fixed ids (`leftMathField`, `xMathField`, `vxMathField`, …). Only one card is mounted at a time, so the ids don't collide.
 
+Tabs keep their insertion order (`TabUIContainer.Order`). Only drag and drop changes it (`move`). Clicking the active tab, or double-clicking any tab, renames it (`rename`). That sets `Tab.label`, and `Tab.get_name()` returns `label` if set, else `name`. `Tab.name` is the stable internal id.
+
 ### Three different type-number schemes (watch out)
 
 | | Func | Pt | Vec | VFld | SCrv |
@@ -62,7 +64,7 @@ Tab data lives in mutable class instances (`TabUIContainer` and friends) held in
 ```json
 {"Func": {"Func 1": {"left": "x^2", "right": "z"}}, "Pt": {"Pt 1": {"x": "1", "y": "0", "z": "0"}}}
 ```
-`Vec` props are `{vec: {x,y,z}, init: {x,y,z}}`. The values are raw LaTeX from MathLive, with real backslashes. `RamenModal` (QR case) compresses the JSON with `lz-string`'s `compressToEncodedURIComponent` and appends it to `BASE_URL`, which is `https://nd-dac-dome.github.io/realmathAR/?z=`. realmathAR's `Parser` decompresses the payload and flattens the type grouping. If you change the payload shape, change both repos.
+`Vec` props are `{vec: {x,y,z}, init: {x,y,z}}`. A tab the user renamed also gets a `label` prop holding its display name. The key stays the internal id (`Func 1`), because realmathAR reads the type from the key. The values are raw LaTeX from MathLive, with real backslashes. `RamenModal` (QR case) compresses the JSON with `lz-string`'s `compressToEncodedURIComponent` and appends it to `BASE_URL`, which is `https://nd-dac-dome.github.io/realmathAR/?z=`. realmathAR's `Parser` decompresses the payload and flattens the type grouping. If you change the payload shape, change both repos.
 
 The QR code is drawn at `QR_SIZE` (300px) with error-correction level `L`. That keeps a 7-component link (about 360 characters) at about 4–5 px per module, so phone cameras read it reliably. At the old 160px, level M, it often failed to scan. Don't shrink it. The modal also has a **Copy link** fallback.
 
@@ -71,7 +73,7 @@ Validation (`Tab.check_valid`) is shallow. It rejects empty fields, `=`, and the
 ## Known issues / gotchas
 
 - `src/common/utilities/*` (`HelpMessage`, `customPropDiv`, `modal`, `qrModal`) is dead code; nothing imports it.
-- The "Report a bug" button and the footer's "Report a Problem" link both mail a former student intern (`arodri37@nd.edu`).
+- The footer's "Report a Problem" link mails a former student intern (`arodri37@nd.edu`). The "Report a bug" button was removed, and `rm-link-btn` is now unused.
 - MathLive can't load its math fonts (`/realmath/assets/fonts` 404s), so it falls back to system fonts. MathLive's `fonts/` directory isn't copied into the build.
 - Help content: the Vector, Vector Field and Space Curve help entries are placeholders, and the Point help's "valid" example isn't a constant.
 - `ErrorBoundary.componentDidCatch` rethrows.
